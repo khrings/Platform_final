@@ -9,7 +9,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: "mysql://${MYSQLUSER}:${MYSQL_ROOT_PASSWORD}@${RAILWAY_TCP_PROXY_DOMAIN}:${RAILWAY_TCP_PROXY_PORT}/${MYSQL_DATABASE}?serverVersion=8.0.32&charset=utf8mb4"
+      DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@symfony-db:3306/${MYSQL_DATABASE}?serverVersion=8.0.32&charset=utf8mb4"
     depends_on:
       - symfony-db
     networks:
@@ -21,8 +21,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQLUSER}
-      MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3310:3306"
     volumes:
@@ -36,8 +36,8 @@ services:
     container_name: platform_phpmyadmin
     environment:
       PMA_HOST: symfony-db
-      PMA_USER: ${MYSQLUSER}
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8082:80"
     depends_on:
