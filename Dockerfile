@@ -42,18 +42,24 @@ RUN apt-get update && apt-get install -y \
 COPY --from=builder /app /app
 
 RUN mkdir -p /app/var && \
+    mkdir -p /app/public && \
     chown -R www-data:www-data /app && \
     chmod -R 755 /app && \
-    chmod -R 775 /app/var
+    chmod -R 775 /app/var && \
+    chmod -R 775 /app/public && \
+    find /app/var -type d -exec chmod 775 {} \; && \
+    find /app/public -type d -exec chmod 775 {} \;
 
 # Configure PHP-FPM to listen on 127.0.0.1:9000
-RUN mkdir -p /usr/local/etc/php-fpm.d && \
+RUN mkdir -p /usr/local/etc/php-fpm.d /var/run/php-fpm && \
     echo '[global]' > /usr/local/etc/php-fpm.d/zzz-app.conf && \
     echo 'daemonize = no' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
     echo '[www]' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
     echo 'listen = 127.0.0.1:9000' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
     echo 'user = www-data' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
-    echo 'group = www-data' >> /usr/local/etc/php-fpm.d/zzz-app.conf
+    echo 'group = www-data' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
+    chmod 775 /var/run/php-fpm && \
+    chown www-data:www-data /var/run/php-fpm
 
 COPY nginx-main.conf /etc/nginx/nginx.conf
 

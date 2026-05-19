@@ -16,10 +16,24 @@ fi
 
 echo "DATABASE_URL is set to: ${DATABASE_URL:0:60}..."
 
+# Ensure PHP-FPM temp directory
+mkdir -p /var/run/php-fpm
+chmod 775 /var/run/php-fpm
+chown www-data:www-data /var/run/php-fpm
+
 # Ensure var directory has correct permissions
 mkdir -p /app/var /app/public
-chmod -R 775 /app/var
+chmod -R 775 /app/var /app/public
 chown -R www-data:www-data /app/var /app/public
+
+# Pre-create cache directories with proper permissions
+mkdir -p /app/var/cache/prod
+mkdir -p /app/var/cache/dev
+mkdir -p /app/var/log
+chmod -R 775 /app/var/cache /app/var/log
+chown -R www-data:www-data /app/var/cache /app/var/log
+
+echo "✓ File permissions set correctly"
 
 # Wait for database to be ready (if using Railway)
 if [ -n "${MYSQL_HOST}" ]; then
