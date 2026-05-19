@@ -190,7 +190,7 @@ foreach ($endpoint in @("/product", "/product/new")) {
 }
 
 if ($RouteTests -gt 0) {
-    Print-Success "Product routes responding ($RouteTests/2 accessible)"
+    Print-Success ("Product routes responding (" + $RouteTests + " of 2 accessible)")
 } else {
     Print-Warning "Could not verify all product routes"
     $script:TestsPassed++
