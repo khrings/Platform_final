@@ -46,6 +46,15 @@ RUN mkdir -p /app/var && \
     chmod -R 755 /app && \
     chmod -R 775 /app/var
 
+# Configure PHP-FPM to listen on 127.0.0.1:9000
+RUN mkdir -p /usr/local/etc/php-fpm.d && \
+    echo '[global]' > /usr/local/etc/php-fpm.d/zzz-app.conf && \
+    echo 'daemonize = no' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
+    echo '[www]' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
+    echo 'listen = 127.0.0.1:9000' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
+    echo 'user = www-data' >> /usr/local/etc/php-fpm.d/zzz-app.conf && \
+    echo 'group = www-data' >> /usr/local/etc/php-fpm.d/zzz-app.conf
+
 COPY nginx-main.conf /etc/nginx/nginx.conf
 
 RUN rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled /etc/nginx/sites-available
